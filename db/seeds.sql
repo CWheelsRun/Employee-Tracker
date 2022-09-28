@@ -6,6 +6,8 @@ VALUES (01, "General Management"),
        (05, "Finance & Accounting"),
        (06, "QA & Customer Support");
 
+SELECT * FROM department;
+
 INSERT INTO role (id, title, salary, department_id)
 VALUES (001, "Chief Executive Officer", "200000", 01),
        (002, "Chief Financial Officer", "175000", 01),
@@ -30,6 +32,8 @@ VALUES (001, "Chief Executive Officer", "200000", 01),
        (021, "Support Lead", "90000", 06),
        (022, "Customer Support Representative", "60000", 06),
 
+SELECT * FROM role;
+
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES  (101, "Peter", "Pan", 001, NULL),
         (102, "John", "Darling", 002, NULL),
@@ -42,3 +46,5 @@ VALUES  (101, "Peter", "Pan", 001, NULL),
         (401, "Wendy", "Darling", 012, NULL),
         (502, "Thomas", "Nibs", 017, 102),
         (603, "Tinker", "Bell", 021, 101);
+
+SELECT * FROM employee;
