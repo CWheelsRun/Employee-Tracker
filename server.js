@@ -57,4 +57,16 @@ mainPrompt = () => {
     });
 };
 
+viewDepartments = () => {
+  const sql = `SELECT department.id AS 'ID',
+  department.name AS 'Dept. Name' FROM department`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      throw error;
+    }
+    console.table(result);
+    mainPrompt();
+  });
+};
+
 mainPrompt();
