@@ -61,9 +61,7 @@ viewDepartments = () => {
   const sql = `SELECT department.id AS 'ID',
               department.name AS 'Dept. Name' FROM department`;
   db.query(sql, (err, result) => {
-    if (err) {
-      throw error;
-    }
+    if (err) throw err;
     console.table(result);
     mainPrompt();
   });
@@ -78,9 +76,26 @@ viewRoles = () => {
               JOIN department ON employee_role.department_id = department.id
               ORDER BY employee_role.id`;
   db.query(sql, (err, result) => {
-    if (err) {
-      throw error;
-    }
+    if (err) throw err;
+    console.table(result);
+    mainPrompt();
+  });
+};
+
+viewEmployees = () => {
+  const sql = `SELECT employee.id ID, 
+              CONCAT(employee.first_name, ' ', employee.last_name) Name, 
+              employee_role.title Role, 
+              department.name AS 'Dept.',  
+              CONCAT('$', FORMAT(employee_role.salary, 0)) Salary, 
+              CONCAT(manager.first_name, ' ', manager.last_name) Manager 
+              FROM employee
+              LEFT JOIN employee_role ON employee.role_id = employee_role.id
+              LEFT JOIN department ON department.id = employee_role.department_id 
+              LEFT JOIN employee AS manager ON manager.id = employee.manager_id
+              ORDER by employee.id`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
     console.table(result);
     mainPrompt();
   });
