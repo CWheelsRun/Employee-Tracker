@@ -59,7 +59,24 @@ mainPrompt = () => {
 
 viewDepartments = () => {
   const sql = `SELECT department.id AS 'ID',
-  department.name AS 'Dept. Name' FROM department`;
+              department.name AS 'Dept. Name' FROM department`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      throw error;
+    }
+    console.table(result);
+    mainPrompt();
+  });
+};
+
+viewRoles = () => {
+  const sql = `SELECT employee_role.id AS 'ID', 
+              employee_role.title AS 'Title', 
+              department.name AS 'Dept. Name', 
+              CONCAT('$', FORMAT(employee_role.salary, 0)) AS 'Salary' 
+              FROM employee_role
+              JOIN department ON employee_role.department_id = department.id
+              ORDER BY employee_role.id`;
   db.query(sql, (err, result) => {
     if (err) {
       throw error;
