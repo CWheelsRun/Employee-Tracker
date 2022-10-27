@@ -197,7 +197,29 @@ async function addRole() {
     });
 }
 
-addEmployee = () => {
+async function addEmployee() {
+  let role_ids = [];
+  let roles = [];
+  let manager_ids = [];
+  let managers = [];
+
+  let sql = `SELECT * FROM employee_role`;
+  let result = await db.promise().query(sql);
+
+  result[0].forEach((obj) => {
+    role_ids.push(obj.id);
+    roles.push(obj.title);
+  });
+
+  sql = `SELECT * FROM employee`;
+  result = await db.promise().query(sql);
+
+  result[0].forEach((obj) => {
+    if (obj.manager_id === null) {
+      manager_ids.push(obj.id);
+      managers.push(obj.first_name + " " + obj.last_name);
+    }
+  });
   inquirer
     .prompt([
       {
@@ -227,36 +249,36 @@ addEmployee = () => {
         },
       },
       {
-        type: "input",
+        type: "list",
         name: "role",
-        message: `What is the employee's role ID?`,
-        validate: (input) => {
-          if (input) {
-            return true;
-          } else {
-            console.log(`Please enter the employee's role ID number!`);
-            return false;
-          }
-        },
+        message: `What is the employee's role?\n`,
+        choices: roles,
       },
       {
-        type: "input",
+        type: "list",
         name: "manager",
-        message: `What is the employee's manager ID?`,
-        validate: (input) => {
-          if (input) {
-            return true;
-          } else {
-            console.log(`Please enter the employee's manager ID number!`);
-            return false;
-          }
-        },
+        message: `Who is the employee's manager?\n`,
+        choices: managers,
       },
     ])
     .then((data) => {
+      let role_id;
+      for (let a = 0; a < roles.length; a++) {
+        if (roles[a] === data.role) {
+          role_id = role_ids[a];
+          break;
+        }
+      }
+      let manager_id;
+      for (let a = 0; a < managers.length; a++) {
+        if (managers[a] === data.manager) {
+          manager_id = manager_ids[a];
+          break;
+        }
+      }
       db.query(
         `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (
-          '${data.first}', '${data.last}', ${parseInt(data.role)}, ${parseInt(data.manager)})`,
+          '${data.first}', '${data.last}', ${parseInt(role_id)}, ${parseInt(manager_id)})`,
         (err, result) => {
           if (err) throw err;
           console.log("Employee Added!");
@@ -264,7 +286,7 @@ addEmployee = () => {
         }
       );
     });
-};
+}
 
 async function updateEmployee() {
   let role_ids = [];
