@@ -256,4 +256,70 @@ addEmployee = () => {
     });
 };
 
+async function updateEmployee() {
+  let role_ids = [];
+  let roles = [];
+  let employee_ids = [];
+  let employees = [];
+
+  let sql = `SELECT * FROM employee_role ORDER BY title`;
+  let result = await db.promise().query(sql);
+
+  result[0].forEach((obj) => {
+    role_ids.push(obj.id);
+    roles.push(obj.title);
+  });
+
+  sql = `SELECT * FROM employee`;
+  result = await db.promise().query(sql);
+
+  result[0].forEach((obj) => {
+    employee_ids.push(obj.id);
+    employees.push(obj.first_name + " " + obj.last_name);
+  });
+
+  return inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: `Which employee's role would you like to update?\n`,
+        choices: employees,
+      },
+      {
+        type: "list",
+        name: "role",
+        message: `What role should this employee belong to?\n`,
+        choices: roles,
+      },
+    ])
+    .then((data) => {
+      let employee_id;
+      for (let a = 0; a < employees.length; a++) {
+        if (employees[a] === data.employee) {
+          employee_id = employee_ids[a];
+          break;
+        }
+      }
+
+      let role_id;
+      for (let a = 0; a < roles.length; a++) {
+        if (roles[a] === data.role) {
+          role_id = role_ids[a];
+          break;
+        }
+      }
+
+      let sql = `UPDATE employee 
+        SET role_id = ${parseInt(role_id)} 
+        WHERE id = ${parseInt(employee_id)}`;
+
+      db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log("\nEmployee Role Updated!");
+        mainPrompt();
+      });
+    });
+}
+
 mainPrompt();
