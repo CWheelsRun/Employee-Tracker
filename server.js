@@ -131,4 +131,62 @@ addDepartment = () => {
     });
 };
 
+addRole = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the title of the role?",
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log("Please enter the role name!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary of the role?",
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log("Please enter the salary of the role!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "department_id",
+        message: "Enter the department ID for this role:",
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log("Please enter the department ID number!");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((data) => {
+      db.query(
+        `INSERT INTO employee_role (title, salary, department_id) VALUES (
+          '${data.title}', ${parseInt(data.salary)}, ${parseInt(
+          data.department_id
+        )})`,
+        (err, result) => {
+          if (err) throw err;
+          console.log("\nRole Added!");
+          mainPrompt();
+        }
+      );
+    });
+};
+
 mainPrompt();
