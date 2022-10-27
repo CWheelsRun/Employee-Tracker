@@ -13,7 +13,8 @@ const db = mysql.createConnection(
 );
 
 mainPrompt = () => {
-  inquirer.prompt({
+  inquirer
+    .prompt({
       type: "list",
       name: "menu",
       message: "\nWhat would you like to do?\n",
@@ -99,6 +100,35 @@ viewEmployees = () => {
     console.table(result);
     mainPrompt();
   });
+};
+
+addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the department?",
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log("Please enter the department name!");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((data) => {
+      db.query(
+        `INSERT INTO department (name) VALUES ('${data.name}')`,
+        (err, result) => {
+          if (err) throw err;
+          console.log("\nDepartment Added!");
+          mainPrompt();
+        }
+      );
+    });
 };
 
 mainPrompt();
