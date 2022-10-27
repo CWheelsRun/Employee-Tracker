@@ -124,7 +124,7 @@ addDepartment = () => {
         `INSERT INTO department (name) VALUES ('${data.name}')`,
         (err, result) => {
           if (err) throw err;
-          console.log("\nDepartment Added!");
+          console.log("Department Added!");
           mainPrompt();
         }
       );
@@ -190,7 +190,7 @@ async function addRole() {
           '${data.title}', ${parseInt(data.salary)}, ${parseInt(dep_id)})`,
         (err, result) => {
           if (err) throw err;
-          console.log("\nRole Added!");
+          console.log("Role Added!");
           mainPrompt();
         }
       );
@@ -259,7 +259,7 @@ addEmployee = () => {
           '${data.first}', '${data.last}', ${parseInt(data.role)}, ${parseInt(data.manager)})`,
         (err, result) => {
           if (err) throw err;
-          console.log("\nEmployee Added!");
+          console.log("Employee Added!");
           mainPrompt();
         }
       );
@@ -326,7 +326,7 @@ async function updateEmployee() {
 
       db.query(sql, (err, result) => {
         if (err) throw err;
-        console.log("\nEmployee Role Updated!");
+        console.log("Employee Role Updated!");
         mainPrompt();
       });
     });
