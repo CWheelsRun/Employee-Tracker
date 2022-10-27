@@ -177,12 +177,79 @@ addRole = () => {
     .then((data) => {
       db.query(
         `INSERT INTO employee_role (title, salary, department_id) VALUES (
-          '${data.title}', ${parseInt(data.salary)}, ${parseInt(
-          data.department_id
-        )})`,
+          '${data.title}', ${parseInt(data.salary)}, ${parseInt(data.department_id)})`,
         (err, result) => {
           if (err) throw err;
           console.log("\nRole Added!");
+          mainPrompt();
+        }
+      );
+    });
+};
+
+addEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first",
+        message: `What is the employee's first name?`,
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log(`Please enter the employee's first  name!`);
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "last",
+        message: `What is the employee's last name?`,
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log(`Please enter the employee's last name!`);
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "role",
+        message: `What is the employee's role ID?`,
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log(`Please enter the employee's role ID number!`);
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: `What is the employee's manager ID?`,
+        validate: (input) => {
+          if (input) {
+            return true;
+          } else {
+            console.log(`Please enter the employee's manager ID number!`);
+            return false;
+          }
+        },
+      },
+    ])
+    .then((data) => {
+      db.query(
+        `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (
+          '${data.first}', '${data.last}', ${parseInt(data.role)}, ${parseInt(data.manager)})`,
+        (err, result) => {
+          if (err) throw err;
+          console.log("\nEmployee Added!");
           mainPrompt();
         }
       );
