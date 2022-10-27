@@ -53,6 +53,7 @@ mainPrompt = () => {
           updateEmployee();
           break;
         case "Exit Application":
+          console.log("Bye!");
           process.exit();
       }
     });
