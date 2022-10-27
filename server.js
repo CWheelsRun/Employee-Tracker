@@ -131,7 +131,17 @@ addDepartment = () => {
     });
 };
 
-addRole = () => {
+async function addRole() {
+  let ids = [];
+  let names = [];
+
+  let sql = `SELECT * FROM department`;
+  let result = await db.promise().query(sql);
+
+  result[0].forEach((obj) => {
+    ids.push(obj.id);
+    names.push(obj.name);
+  });
   inquirer
     .prompt([
       {
@@ -161,23 +171,23 @@ addRole = () => {
         },
       },
       {
-        type: "input",
-        name: "department_id",
-        message: "Enter the department ID for this role:",
-        validate: (input) => {
-          if (input) {
-            return true;
-          } else {
-            console.log("Please enter the department ID number!");
-            return false;
-          }
-        },
+        type: "list",
+        name: "choice",
+        message: "Which department does this role belong to?",
+        choices: names,
       },
     ])
     .then((data) => {
+      let dep_id;
+      for (let a = 0; a < names.length; a++) {
+        if (names[a] === data.choice) {
+          dep_id = ids[a];
+          break;
+        }
+      }
       db.query(
         `INSERT INTO employee_role (title, salary, department_id) VALUES (
-          '${data.title}', ${parseInt(data.salary)}, ${parseInt(data.department_id)})`,
+          '${data.title}', ${parseInt(data.salary)}, ${parseInt(dep_id)})`,
         (err, result) => {
           if (err) throw err;
           console.log("\nRole Added!");
@@ -185,7 +195,7 @@ addRole = () => {
         }
       );
     });
-};
+}
 
 addEmployee = () => {
   inquirer
@@ -289,7 +299,7 @@ async function updateEmployee() {
       {
         type: "list",
         name: "role",
-        message: `What role should this employee belong to?\n`,
+        message: `What should this employee's role become?\n`,
         choices: roles,
       },
     ])
